@@ -37,25 +37,37 @@ public class NetworkManager : MonoBehaviour
             MyServer.clients[_fromClient].CreatePlayer();
             //Send captured Image(coroutine which waits until image is encoded)
             StartCoroutine(StartSendImage(_fromClient));
-
         });
         MyServer.packetHandlers.Add(0x2000, (int _fromClient, ArraySegment<byte> _packet) =>
         {
-            int outputSize = 4;
+            float output;
             Debug.Log($"received 0x2000");
-            for (int i = 0; i < outputSize; i++)
-            {
-                double output = BitConverter.ToSingle(_packet.Array, 2+_packet.Offset + outputSize * 4);
-                Debug.Log($"{output}");
-                //update _fromClient player movement
-            }
-
 
             if (MyServer.clients[_fromClient].player == null)
             {
                 Debug.Log("Failed to handle 0x2000 packet because there was no player object");
                 return;
             }
+
+            //update _fromClient player movement
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 0);
+            Debug.Log($"forwardForce: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().forwardForce = output;
+
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 1);
+            Debug.Log($"horizontalForce: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().horizontalForce = output;
+
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 2);
+            Debug.Log($"xRotationSpeed: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().xRotationSpeed = output;
+
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 3);
+            Debug.Log($"yRotationSpeed: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().yRotationSpeed = output;
+
+
+            
             //check if playerpoint is below 0
             if (MyServer.clients[_fromClient].player.GetComponent<PlayerPoint>().getPoint() <= 0)
             {
@@ -64,7 +76,7 @@ public class NetworkManager : MonoBehaviour
 
 
 
-
+                Debug.Log("Start Destroying Player");
                 //destroy player and camera
                 MyServer.clients[_fromClient].DestroyObjects();
             }
@@ -158,6 +170,7 @@ public class NetworkManager : MonoBehaviour
 
     IEnumerator StartSendImage(int connectionId)
     {
+        Debug.Log("Start sending 0x2000 Packet");
         if (MyServer.clients[connectionId].cameraHolder == null)
         {
             Debug.Log("Failed to send image because there was no cameraHolder");
@@ -171,7 +184,10 @@ public class NetworkManager : MonoBehaviour
         cameraCapture.CompleteCaptureRequest = false;
         List<byte> _packet = new List<byte>();
         _packet.AddRange(BitConverter.GetBytes((ushort)0x2000));
+        _packet.AddRange(BitConverter.GetBytes(MyServer.clients[connectionId].player.GetComponent<PlayerPoint>().getPoint()));
+        _packet.AddRange(BitConverter.GetBytes(cameraCapture.bytes.Length));
         _packet.AddRange(cameraCapture.bytes);
         server.Send(connectionId, new ArraySegment<byte>(_packet.ToArray()));
+        Debug.Log("End sending 0x2000 Packet");
     }
 }

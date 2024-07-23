@@ -10,6 +10,7 @@ public class LocalInput : MonoBehaviour
 
     public PlayerMovement playerMovement;
     public float keyVertical;
+    public float keyHorizontal;
 
     private bool cursorLocked = true;
 
@@ -20,6 +21,7 @@ public class LocalInput : MonoBehaviour
         mouseVertical = 0;
         playerMovement = GetComponent<PlayerMovement>();
         keyVertical = 0;
+        keyHorizontal = 0;
         ToggleCursorLock(true);
     }
 
@@ -28,10 +30,12 @@ public class LocalInput : MonoBehaviour
     {
         mouseHorizontal = Input.GetAxisRaw("Mouse X");
         mouseVertical = Input.GetAxisRaw("Mouse Y");
-        playerMovement.xRotationSpeed = mouseVertical * (-1);
+        playerMovement.xRotationSpeed = mouseVertical;
         playerMovement.yRotationSpeed = mouseHorizontal;
         keyVertical = Input.GetAxisRaw("Vertical");
+        keyHorizontal = Input.GetAxisRaw("Horizontal");
         playerMovement.forwardForce = keyVertical;
+        playerMovement.horizontalForce = keyHorizontal;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {

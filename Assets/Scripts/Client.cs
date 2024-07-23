@@ -29,9 +29,7 @@ public class Client
         cameraHolder = NetworkManager.instance.InstantiateCameraHolder();
 
         //Make cameraHolder to follow player object
-        //###¿€º∫¡ﬂ###
-
-
+        cameraHolder.GetComponent<FollowPlayer>().StartFollow(player);
 
 
     }
