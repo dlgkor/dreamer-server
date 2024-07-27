@@ -32,9 +32,7 @@ public class Client
         //Make cameraHolder to follow player object
         //###¿€º∫¡ﬂ###
 
-
-
-
+        cameraHolder.GetComponent<FollowPlayer>().StartFollow(player.transform);
     }
 
     public void DestroyObjects()

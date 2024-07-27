@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public GameObject Orientation;
-    public GameObject LookDirection;
+    private Transform Orientation;
+    private Transform LookDirection;
 
     //힘에 대한 정보
  
@@ -31,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        LookDirection = transform.Find("LookDirection");
+        Orientation = transform.Find("Orientation");
+
         forwardForce = 0;
         horizontalForce = 0;
         xRotationSpeed = 0;
@@ -44,17 +47,17 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 forwardDir = Orientation.transform.forward;
+        Vector3 forwardDir = Orientation.forward;
         rb.AddForce(forwardDir.normalized * forwardForce * forwardMoveCoefficient);
-        Vector3 horizontalDir = Orientation.transform.right;
+        Vector3 horizontalDir = Orientation.right;
         rb.AddForce(horizontalDir.normalized * horizontalForce * horizontalMoveCoefficient);
         SpeedControl();
 
         xRotation -= xRotationSpeed * Time.fixedDeltaTime * mouseSensitivity;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); //상하 시선이동 범위 제한
         yRotation += yRotationSpeed * Time.fixedDeltaTime * mouseSensitivity;
-        Orientation.transform.rotation = Quaternion.Euler(0,yRotation,0);
-        LookDirection.transform.rotation = Quaternion.Euler(xRotation,yRotation,0);
+        Orientation.rotation = Quaternion.Euler(0,yRotation,0);
+        LookDirection.rotation = Quaternion.Euler(xRotation,yRotation,0);
     }
 
     private void SpeedControl()

@@ -94,6 +94,24 @@ public class NetworkManager : MonoBehaviour
 
             //Instantiate Player and Camera Prefab
             MyServer.clients[_fromClient].CreatePlayer();
+            int connectionId = _fromClient; //local copy to use current _fromClient as value inside lambda function
+            MyServer.clients[_fromClient].player.GetComponent<PlayerPoint>().OnDestroyEvent += () =>
+            {
+                if (MyServer.clients[connectionId].SSI != null)
+                {
+                    StopCoroutine(MyServer.clients[connectionId].SSI);
+                }
+
+                float fitness = MyServer.clients[connectionId].player.GetComponent<PlayerFitness>().fitness;
+
+                Destroy(MyServer.clients[connectionId].cameraHolder);
+                Destroy(MyServer.clients[connectionId].player);
+
+                List<byte> _packet = new List<byte>();
+                _packet.AddRange(BitConverter.GetBytes((ushort)0x3000));
+                _packet.AddRange(BitConverter.GetBytes(fitness));
+                server.Send(connectionId, new ArraySegment<byte>(_packet.ToArray()));
+            };
             //Send captured Image(coroutine which waits until image is encoded)
             MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
         });

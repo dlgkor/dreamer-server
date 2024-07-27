@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-public GameObject LookDirection;
-public GameObject Player;
+    public Transform Player;
+    public Transform LookDirection;
 
-    void Start()
+    public void StartFollow(Transform target)
     {
-        
+        Player = target;
+        LookDirection = target.Find("LookDirection");
+    }
+
+    public void StopFollow()
+    {
+        Player = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Player.transform.position;
-        transform.rotation = LookDirection.transform.rotation;
-        
+        if(Player == null) {
+            return;
+        }
+
+        transform.position = Player.position;
+        transform.rotation = LookDirection.rotation;
     }
 }
