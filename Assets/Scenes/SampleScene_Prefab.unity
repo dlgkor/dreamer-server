@@ -782,6 +782,7 @@ MonoBehaviour:
   port: 2005
   playerPrefab: {fileID: 1436618375948442732, guid: c01d2eb716d49334e820702db39e8641, type: 3}
   cameraHolderPrefab: {fileID: 5427772638828062372, guid: 07f3df6e1c3c0d745a2508d8068cb8b1, type: 3}
+  rewardGenerator: {fileID: 2126541178}
 --- !u!4 &786595269
 Transform:
   m_ObjectHideFlags: 0
@@ -1425,11 +1426,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rewardPrefab: {fileID: 3219774709658931375, guid: aa371fa16f8b5794bbbc7e0937667bea, type: 3}
-  maxRewards: 10
-  minTime: 1
-  maxTime: 3
-  spawnAreaMin: {x: -18, y: 1, z: -18}
-  spawnAreaMax: {x: 18, y: 1, z: 18}
+  maxRewards: 20
+  minTime: 0.5
+  maxTime: 1.5
+  spawnAreaMin: {x: -18, y: 0.2, z: -18}
+  spawnAreaMax: {x: 18, y: 0.7, z: 18}
 --- !u!4 &2126541179
 Transform:
   m_ObjectHideFlags: 0

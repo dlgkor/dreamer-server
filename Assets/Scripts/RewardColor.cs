@@ -7,7 +7,7 @@ public enum RewardColorElement
 
 public class RewardColor : MonoBehaviour
 {
-    [SerializeField] private RewardColorElement rewardColorElement;
+    [SerializeField] public RewardColorElement rewardColorElement;
 
     public Color GetColor()
     {
@@ -27,7 +27,7 @@ public class RewardColor : MonoBehaviour
     }
 
     // ApplyColor 메서드: RewardColor에서 색상 정보를 가져와서 적용
-    private void ApplyColor()
+    public void ApplyColor()
     {
         var renderer = GetComponent<MeshRenderer>();
 

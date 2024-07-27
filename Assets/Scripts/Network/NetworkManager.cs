@@ -10,8 +10,12 @@ public class NetworkManager : MonoBehaviour
     private Telepathy.Server server;
     public int port = 2005;
 
-    public GameObject playerPrefab;
-    public GameObject cameraHolderPrefab;
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject cameraHolderPrefab;
+    [SerializeField] private RewardGenerator rewardGenerator;
+    
+
+    private int generation = 0;
 
     private void Awake()
     {
@@ -30,8 +34,13 @@ public class NetworkManager : MonoBehaviour
     {
         MyServer.packetHandlers.Add(0x1000, (int _fromClient, ArraySegment<byte> _packet) =>
         {
-            int generation = BitConverter.ToInt32(_packet.Array, 2+_packet.Offset);
-            Debug.Log($"received 0x1000. Generation: {generation}");
+            int current_generation = BitConverter.ToInt32(_packet.Array, 2+_packet.Offset);
+            Debug.Log($"received 0x1000. Generation: {current_generation}");
+            if(generation != current_generation)
+            {
+                generation = current_generation;
+                rewardGenerator?.Shuffle();
+            }
 
             //Instantiate Player and Camera Prefab
             MyServer.clients[_fromClient].CreatePlayer();
@@ -63,7 +72,7 @@ public class NetworkManager : MonoBehaviour
         MyServer.packetHandlers.Add(0x2000, (int _fromClient, ArraySegment<byte> _packet) =>
         {
             float output;
-            Debug.Log($"received 0x2000");
+            //Debug.Log($"received 0x2000");
 
             if (MyServer.clients[_fromClient].player == null)
             {
@@ -73,16 +82,16 @@ public class NetworkManager : MonoBehaviour
 
             //update _fromClient player movement
             output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 0);
-            Debug.Log($"forwardForce: {output}");
+            //Debug.Log($"forwardForce: {output}");
             MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().forwardForce = output;
             output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 1);
-            Debug.Log($"horizontalForce: {output}");
+            //Debug.Log($"horizontalForce: {output}");
             MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().horizontalForce = output;
             output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 2);
-            Debug.Log($"xRotationSpeed: {output}");
+            //Debug.Log($"xRotationSpeed: {output}");
             MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().xRotationSpeed = output;
             output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 3);
-            Debug.Log($"yRotationSpeed: {output}");
+            //Debug.Log($"yRotationSpeed: {output}");
             MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().yRotationSpeed = output;
 
             MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
@@ -116,7 +125,7 @@ public class NetworkManager : MonoBehaviour
 
     void OnClientdata(int connectionId, ArraySegment<byte> data) {
         string message = System.Text.Encoding.UTF8.GetString(data);
-        Debug.Log($"Received from {connectionId}: {data.Count}");
+        //Debug.Log($"Received from {connectionId}: {data.Count}");
         MyServer.clients[connectionId].HandleData(data);
     }
 

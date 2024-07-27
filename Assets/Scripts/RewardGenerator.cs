@@ -14,8 +14,16 @@ public class RewardGenerator : MonoBehaviour
     private float nextSpawnTime;
     private int rewardCounter = 0; // 보상 고유 번호를 위한 카운터
 
+    private float[] colorValue;
+
     void Start()
     {
+        colorValue = new float[4];
+        colorValue[(int)RewardColorElement.Red] = 0.2f;
+        colorValue[(int)RewardColorElement.Blue] = -0.3f;
+        colorValue[(int)RewardColorElement.Green] = 0f;
+        colorValue[(int)RewardColorElement.Black] = -0.1f;
+
         ScheduleNextSpawn();
     }
 
@@ -50,6 +58,11 @@ public class RewardGenerator : MonoBehaviour
         GameObject reward = Instantiate(rewardPrefab, spawnPosition, Quaternion.identity); //Reward Prefab Instantiate 하기
         rewards.Add(reward);
 
+        int randomColor = Random.Range(0, 4);
+        reward.GetComponent<RewardColor>().rewardColorElement = (RewardColorElement)randomColor;
+        reward.GetComponent<RewardColor>().ApplyColor();
+        reward.GetComponent<Reward>().RewardScore = colorValue[randomColor];
+
         // 보상 고유 번호 증가 및 설정
         rewardCounter++;
         int rewardID = rewardCounter;
@@ -69,6 +82,18 @@ public class RewardGenerator : MonoBehaviour
                 //Debug.Log($"Reward{rewardID} 삭제: 생성 시각: {spawnTime}, 삭제 시각: {destroyTime}, 삭제 원인: {deleteType}");
             };
             rewardLifetime.spawnTime = spawnTime; // RewardLifetime에 생성 시각 전달
+        }
+    }
+
+    public void Shuffle()
+    {
+        int n = 4;
+        while (n > 1)
+        {
+            int k = Random.Range(0, n--);
+            float temp = colorValue[n];
+            colorValue[n] = colorValue[k];
+            colorValue[k] = temp;
         }
     }
 }

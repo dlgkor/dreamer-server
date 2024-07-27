@@ -7,6 +7,6 @@ public class Reward : MonoBehaviour
     public float RewardScore
     {
         get { return rewardScore; }
-        private set { rewardScore = value; }
+        set { rewardScore = value; }
     }
 }
