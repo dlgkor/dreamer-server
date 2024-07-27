@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213144b328e94e140adb2e7a49e679e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rewardScore: 0.5
+  rewardScore: 0.1
 --- !u!114 &8105384618027215673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,5 +146,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46b6b00908d25a4eb2f6ccddd450bfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 10
+  lifetime: 3
   spawnTime: 0

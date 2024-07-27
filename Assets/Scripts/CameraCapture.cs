@@ -12,7 +12,7 @@ public class CameraCapture : MonoBehaviour
 
     void Start()
     {
-        renderTexture = new RenderTexture(256, 256, 16); // renderTexture 변수에 Render Texture를 동적 생성 후 할당
+        renderTexture = new RenderTexture(256, 256, 24, RenderTextureFormat.Default); // renderTexture 변수에 Render Texture를 동적 생성 후 할당
         renderTexture.Create();
         
         gameObject.GetComponent<Camera>().targetTexture = renderTexture;

@@ -56,7 +56,7 @@ public class RewardGenerator : MonoBehaviour
 
         // 생성 시각과 위치를 콘솔에 출력
         float spawnTime = Time.time;
-        Debug.Log($"Reward{rewardID} 생성: 위치({spawnPosition.x}, {spawnPosition.y}, {spawnPosition.z}), 시각: {spawnTime}");
+        //Debug.Log($"Reward{rewardID} 생성: 위치({spawnPosition.x}, {spawnPosition.y}, {spawnPosition.z}), 시각: {spawnTime}");
 
         // RewardLifetime 스크립트를 Reward에 추가하여, 삭제될 때 리스트에서 제거하도록 설정
         RewardLifetime rewardLifetime = reward.GetComponent<RewardLifetime>();
@@ -66,7 +66,7 @@ public class RewardGenerator : MonoBehaviour
             {
                 rewards.Remove(reward);
                 float destroyTime = Time.time;
-                Debug.Log($"Reward{rewardID} 삭제: 생성 시각: {spawnTime}, 삭제 시각: {destroyTime}, 삭제 원인: {deleteType}");
+                //Debug.Log($"Reward{rewardID} 삭제: 생성 시각: {spawnTime}, 삭제 시각: {destroyTime}, 삭제 원인: {deleteType}");
             };
             rewardLifetime.spawnTime = spawnTime; // RewardLifetime에 생성 시각 전달
         }
