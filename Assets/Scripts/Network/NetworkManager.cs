@@ -87,34 +87,6 @@ public class NetworkManager : MonoBehaviour
 
             MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
         });
-        MyServer.packetHandlers.Add(0x3000, (int _fromClient, ArraySegment<byte> _packet) =>
-        {
-            int generation = BitConverter.ToInt32(_packet.Array, 2+_packet.Offset);
-            Debug.Log($"received 0x3000. Generation: {generation}");
-
-            //Instantiate Player and Camera Prefab
-            MyServer.clients[_fromClient].CreatePlayer();
-            int connectionId = _fromClient; //local copy to use current _fromClient as value inside lambda function
-            MyServer.clients[_fromClient].player.GetComponent<PlayerPoint>().OnDestroyEvent += () =>
-            {
-                if (MyServer.clients[connectionId].SSI != null)
-                {
-                    StopCoroutine(MyServer.clients[connectionId].SSI);
-                }
-
-                float fitness = MyServer.clients[connectionId].player.GetComponent<PlayerFitness>().fitness;
-
-                Destroy(MyServer.clients[connectionId].cameraHolder);
-                Destroy(MyServer.clients[connectionId].player);
-
-                List<byte> _packet = new List<byte>();
-                _packet.AddRange(BitConverter.GetBytes((ushort)0x3000));
-                _packet.AddRange(BitConverter.GetBytes(fitness));
-                server.Send(connectionId, new ArraySegment<byte>(_packet.ToArray()));
-            };
-            //Send captured Image(coroutine which waits until image is encoded)
-            MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
-        });
 
         server = new Telepathy.Server(65536);
         server.OnConnected = OnClientConnected;
