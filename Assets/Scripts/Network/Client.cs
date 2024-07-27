@@ -8,6 +8,7 @@ public class Client
     private int clientId;
     public GameObject player;
     public GameObject cameraHolder;
+    public Coroutine SSI;
 
     public Client(int clientId)
     {
@@ -39,9 +40,7 @@ public class Client
     public void DestroyObjects()
     {
         //Destroy Player and CameraHolder gameObject
-        NetworkManager.instance.DestroyPlayer(player);
         NetworkManager.instance.DestroyCameraHolder(cameraHolder);
-        player = null;
-        cameraHolder = null;
+        NetworkManager.instance.DestroyPlayer(player);
     }
 }

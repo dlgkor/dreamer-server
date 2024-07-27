@@ -9,6 +9,9 @@ public class PlayerPoint : MonoBehaviour
     private float playerPoints;  // 플레이어의 포인트
     private float dreward;
 
+    public delegate void PlayerDestroyed();
+    public event PlayerDestroyed OnDestroyEvent;
+
     private void Start()
     {
         playerPoints = maxPlayerPoints; //플레이어 포인트 최대값으로 초기화
@@ -22,14 +25,10 @@ public class PlayerPoint : MonoBehaviour
             playerPoints -= pointDeductionRate; //플레이어 포인트 양수면 감소시킴
 
             //포인트가 0보다 작아지면 플레이어 오브젝트 파괴
-            //하지만 여기서 파괴할 경우 이 플레이어 오브젝트를 참조하는 다른 오브젝트들이 에러를 쏟아냄
-            //다른 스크립트에서 플레이어 오브젝트 사망 여부를 판별하고 기록한 후에 Client.cs 스크립트에서 접근할 예정
-            /*
             if (playerPoints < 0)
             {
-                Destroy(this.gameObject); 
+                OnDestroyEvent?.Invoke();
             }
-            */
         }
     }
 

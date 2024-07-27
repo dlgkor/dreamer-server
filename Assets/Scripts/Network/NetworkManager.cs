@@ -35,44 +35,57 @@ public class NetworkManager : MonoBehaviour
 
             //Instantiate Player and Camera Prefab
             MyServer.clients[_fromClient].CreatePlayer();
+
+            //Add Ondestroy Event
+            int connectionId = _fromClient; //local copy to use current _fromClient as value inside lambda function
+            MyServer.clients[_fromClient].player.GetComponent<PlayerPoint>().OnDestroyEvent += () =>
+            {
+                if(MyServer.clients[connectionId].SSI != null)
+                {
+                    StopCoroutine(MyServer.clients[connectionId].SSI);
+                }
+
+                float fitness = MyServer.clients[connectionId].player.GetComponent<PlayerFitness>().fitness;
+
+                Destroy(MyServer.clients[connectionId].cameraHolder);
+                Destroy(MyServer.clients[connectionId].player);
+
+                List<byte> _packet = new List<byte>();
+                _packet.AddRange(BitConverter.GetBytes((ushort)0x3000));
+                _packet.AddRange(BitConverter.GetBytes(fitness));
+                server.Send(connectionId, new ArraySegment<byte>(_packet.ToArray()));
+            };
+
             //Send captured Image(coroutine which waits until image is encoded)
-            StartCoroutine(StartSendImage(_fromClient));
+            MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
 
         });
         MyServer.packetHandlers.Add(0x2000, (int _fromClient, ArraySegment<byte> _packet) =>
         {
-            int outputSize = 4;
+            float output;
             Debug.Log($"received 0x2000");
-            for (int i = 0; i < outputSize; i++)
-            {
-                double output = BitConverter.ToSingle(_packet.Array, 2+_packet.Offset + outputSize * 4);
-                Debug.Log($"{output}");
-                //update _fromClient player movement
-            }
-
 
             if (MyServer.clients[_fromClient].player == null)
             {
                 Debug.Log("Failed to handle 0x2000 packet because there was no player object");
                 return;
             }
-            //check if playerpoint is below 0
-            if (MyServer.clients[_fromClient].player.GetComponent<PlayerPoint>().getPoint() <= 0)
-            {
-                //send fitness packet
-                //###작성중###
 
+            //update _fromClient player movement
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 0);
+            Debug.Log($"forwardForce: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().forwardForce = output;
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 1);
+            Debug.Log($"horizontalForce: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().horizontalForce = output;
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 2);
+            Debug.Log($"xRotationSpeed: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().xRotationSpeed = output;
+            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 3);
+            Debug.Log($"yRotationSpeed: {output}");
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().yRotationSpeed = output;
 
-
-
-                //destroy player and camera
-                MyServer.clients[_fromClient].DestroyObjects();
-            }
-            else
-            {
-                //send captured Image(coroutine which waits until image is encoded)
-                StartCoroutine(StartSendImage(_fromClient));
-            }
+            MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
         });
         MyServer.packetHandlers.Add(0x3000, (int _fromClient, ArraySegment<byte> _packet) =>
         {
@@ -82,7 +95,7 @@ public class NetworkManager : MonoBehaviour
             //Instantiate Player and Camera Prefab
             MyServer.clients[_fromClient].CreatePlayer();
             //Send captured Image(coroutine which waits until image is encoded)
-            StartCoroutine(StartSendImage(_fromClient));
+            MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
         });
 
         server = new Telepathy.Server(65536);
@@ -163,7 +176,7 @@ public class NetworkManager : MonoBehaviour
             Debug.Log("Failed to send image because there was no cameraHolder");
             yield break;
         }
-        CameraCapture cameraCapture = MyServer.clients[connectionId].cameraHolder.transform.GetChild(0).GetComponent<CameraCapture>();
+        CameraCapture cameraCapture = MyServer.clients[connectionId].cameraHolder.transform.Find("PlayerCamera").GetComponent<CameraCapture>();
         cameraCapture.StartCaptureAndSaveImage();
 
         yield return new WaitUntil(() => cameraCapture.CompleteCaptureRequest); //카메라 출력 JPEG 변환이 완료될때까지 코루틴 실행 시점 연장
