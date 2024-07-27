@@ -6,7 +6,7 @@ public class PlayerPoint : MonoBehaviour
 {
     public float maxPlayerPoints = 1.0f; // 플레이어 포인트 최대값
     public float pointDeductionRate = 0.0001f; // 플레이어 포인트 프레임당 감소량
-    private float playerPoints;  // 플레이어의 포인트
+    [SerializeField] private float playerPoints;  // 플레이어의 포인트
     private float dreward;
 
     public delegate void PlayerDestroyed();
@@ -20,15 +20,14 @@ public class PlayerPoint : MonoBehaviour
 
     private void Update()
     {
-        if (playerPoints > 0)
+        if (playerPoints > 0f)
         {
             playerPoints -= pointDeductionRate; //플레이어 포인트 양수면 감소시킴
-
-            //포인트가 0보다 작아지면 플레이어 오브젝트 파괴
-            if (playerPoints < 0)
-            {
-                OnDestroyEvent?.Invoke();
-            }
+        }
+        //포인트가 0보다 작아지면 플레이어 오브젝트 파괴
+        if (playerPoints <= 0f)
+        {
+            OnDestroyEvent?.Invoke();
         }
     }
 
