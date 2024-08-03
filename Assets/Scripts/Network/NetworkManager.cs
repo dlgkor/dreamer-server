@@ -81,18 +81,34 @@ public class NetworkManager : MonoBehaviour
             }
 
             //update _fromClient player movement
-            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 0);
-            //Debug.Log($"forwardForce: {output}");
-            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().forwardForce = output;
-            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 1);
-            //Debug.Log($"horizontalForce: {output}");
-            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().horizontalForce = output;
-            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 2);
-            //Debug.Log($"xRotationSpeed: {output}");
-            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().xRotationSpeed = output;
-            output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 3);
-            //Debug.Log($"yRotationSpeed: {output}");
-            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().yRotationSpeed = output;
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().forwardForce = 0f;
+            for(int i = 0; i < 16; i++)
+            {
+                output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * i);
+                MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().forwardForce += output;
+            }
+
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().horizontalForce = 0f;
+            for(int i = 0; i < 16; i++)
+            {
+                output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 16 * 1 + 4 * i);
+                MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().horizontalForce += output;
+            }
+
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().yRotationSpeed = 0f;
+            for(int i = 0; i < 16; i++)
+            {
+                output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 16 * 2 + 4 * i);
+                MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().yRotationSpeed += output;
+            }
+
+            MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().xRotationSpeed = 0f;
+            for(int i = 0; i < 16; i++)
+            {
+                output = BitConverter.ToSingle(_packet.Array, 2 + _packet.Offset + 4 * 16 * 3 + 4 * i);
+                MyServer.clients[_fromClient].player.GetComponent<PlayerMovement>().xRotationSpeed += output;
+            }
+            
 
             MyServer.clients[_fromClient].SSI = StartCoroutine(StartSendImage(_fromClient));
         });
@@ -143,7 +159,7 @@ public class NetworkManager : MonoBehaviour
 
     public GameObject InstantiatePlayer()
     {
-        return Instantiate(playerPrefab, new Vector3(0f, 3.0f, 0f), Quaternion.identity);
+        return Instantiate(playerPrefab, new Vector3(0f, 1.0f, 0f), Quaternion.identity);
     }
 
     public void DestroyPlayer(GameObject player)
@@ -156,7 +172,7 @@ public class NetworkManager : MonoBehaviour
 
     public GameObject InstantiateCameraHolder()
     {
-        return Instantiate(cameraHolderPrefab, new Vector3(0f, 3.0f, 0f), Quaternion.identity);
+        return Instantiate(cameraHolderPrefab, new Vector3(0f, 1.0f, 0f), Quaternion.identity);
     }
 
     public void DestroyCameraHolder(GameObject cameraHolder)

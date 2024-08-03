@@ -19,10 +19,10 @@ public class RewardGenerator : MonoBehaviour
     void Start()
     {
         colorValue = new float[4];
-        colorValue[(int)RewardColorElement.Red] = 0.2f;
-        colorValue[(int)RewardColorElement.Blue] = -0.3f;
-        colorValue[(int)RewardColorElement.Green] = 0f;
-        colorValue[(int)RewardColorElement.Black] = -0.1f;
+        colorValue[(int)RewardColorElement.Red] = 0.4f;
+        colorValue[(int)RewardColorElement.Blue] = 0.45f;
+        colorValue[(int)RewardColorElement.Green] = 0.55f;
+        colorValue[(int)RewardColorElement.Black] = 0.5f;
 
         ScheduleNextSpawn();
     }

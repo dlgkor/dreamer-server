@@ -122,8 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 042042158213ccb4c86e72846b4b47bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayerPoints: 5
-  pointDeductionRate: 0.001
+  maxPlayerPoints: 1
+  pointDeductionRate: 0.0001
   playerPoints: 0
 --- !u!114 &2516430355981935324
 MonoBehaviour:
@@ -139,13 +139,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardForce: 0
   horizontalForce: 0
-  horizontalMoveCoefficient: 70
-  forwardMoveCoefficient: 70
+  horizontalMoveCoefficient: 40
+  forwardMoveCoefficient: 40
   speedLimit: 10
   xRotationSpeed: 0
   yRotationSpeed: 0
   JumpForce: 0
-  mouseSensitivity: 100
+  mouseSensitivity: 50
 --- !u!114 &1684459589461950891
 MonoBehaviour:
   m_ObjectHideFlags: 0

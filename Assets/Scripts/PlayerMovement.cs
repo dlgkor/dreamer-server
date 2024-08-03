@@ -58,6 +58,11 @@ public class PlayerMovement : MonoBehaviour
         yRotation += yRotationSpeed * Time.fixedDeltaTime * mouseSensitivity;
         Orientation.rotation = Quaternion.Euler(0,yRotation,0);
         LookDirection.rotation = Quaternion.Euler(xRotation,yRotation,0);
+        
+        GetComponent<PlayerPoint>()?.AddPoints((Mathf.Abs(forwardForce * 100f)
+            + Mathf.Abs(horizontalForce * 100f)
+            + Mathf.Abs(xRotationSpeed * 5f) + Mathf.Abs(yRotationSpeed * 5f)) * (-1) * Time.fixedDeltaTime * 0.0001f);
+        
     }
 
     private void SpeedControl()
