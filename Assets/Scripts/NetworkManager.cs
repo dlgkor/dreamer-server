@@ -171,8 +171,6 @@ public class NetworkManager : MonoBehaviour
         cameraCapture.CompleteCaptureRequest = false;
         List<byte> _packet = new List<byte>();
         _packet.AddRange(BitConverter.GetBytes((ushort)0x2000));
-        _packet.AddRange(BitConverter.GetBytes(MyServer.clients[connectionId].player.GetComponent<PlayerPoint>().getdReward()));
-        _packet.AddRange(BitConverter.GetBytes(cameraCapture.bytes.Length));
         _packet.AddRange(cameraCapture.bytes);
         server.Send(connectionId, new ArraySegment<byte>(_packet.ToArray()));
     }

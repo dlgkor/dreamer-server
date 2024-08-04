@@ -1,63 +1,48 @@
 using UnityEngine;
 
-public enum RewardColorElement
+public enum RewardColor
 {
     Red, Blue, Green, Black
 }
 
-public class RewardColor : MonoBehaviour
+public class RewardColorComponent : MonoBehaviour
 {
-    [SerializeField] private RewardColorElement rewardColorElement;
+    [SerializeField] private RewardColor rewardColor;
 
     public Color GetColor()
     {
-        switch (rewardColorElement)
+        switch (rewardColor)
         {
-            case RewardColorElement.Red:
+            case RewardColor.Red:
                 return Color.red;
-            case RewardColorElement.Blue:
+            case RewardColor.Blue:
                 return Color.blue;
-            case RewardColorElement.Green:
+            case RewardColor.Green:
                 return Color.green;
-            case RewardColorElement.Black:
+            case RewardColor.Black:
                 return Color.black;
             default:
                 return Color.white;
         }
     }
 
-    // ApplyColor 메서드: RewardColor에서 색상 정보를 가져와서 적용
-    private void ApplyColor()
-    {
-        var renderer = GetComponent<MeshRenderer>();
-
-        if (renderer != null)
-        {
-            Material tempMaterial;
-
-            if (renderer.sharedMaterial != null)
-            {
-                tempMaterial = new Material(renderer.sharedMaterial);
-            }
-            else
-            {
-                tempMaterial = new Material(Shader.Find("Standard"));
-            }
-
-            tempMaterial.color = GetColor();
-            renderer.sharedMaterial = tempMaterial;
-        }
-    }
-
-    // OnValidate 메서드: 유니티 에디터에서 값이 변경될 때 호출됨
+// ApplyColor 메서드: RewardColorComponent에서 색상 정보를 가져와서 적용
+    
     private void OnValidate()
     {
         ApplyColor();
     }
-
-    // Awake 메서드: 객체가 생성될 때 색상 적용
-    private void Awake()
+    
+ // OnValidate 메서드 추가: 유니티 에디터에서 값이 변경될 때 호출됨
+    private void ApplyColor()
     {
-        ApplyColor();
+        var renderer = GetComponent<MeshRenderer>();
+        var tempMaterial = new Material(renderer.sharedMaterial);
+
+        if (renderer != null)
+        {
+            tempMaterial.color = GetColor();
+            renderer.sharedMaterial = tempMaterial;
+        }
     }
 }

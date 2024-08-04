@@ -10,8 +10,16 @@ public class LocalInput : MonoBehaviour
 
     public PlayerMovement playerMovement;
     public float keyVertical;
+<<<<<<< HEAD
     public float keyHorizontal;
+=======
+    public float KeyHorizontal;
+>>>>>>> 8c8aeda9a18718168c684636512b582fe59e3c7a
     private bool cursorLocked = true;
+    public bool isJumpPressed()
+    {
+        return Input.GetKeyDown(KeyCode.Space); // TAB ë°”ë¥¼ ì í”„ ì…ë ¥ìœ¼ë¡œ ì‚¬ìš©í•©ë‹ˆë‹¤.
+    }
 
 
     void Start()
@@ -20,7 +28,11 @@ public class LocalInput : MonoBehaviour
         mouseVertical = 0;
         playerMovement = GetComponent<PlayerMovement>();
         keyVertical = 0;
+<<<<<<< HEAD
         keyHorizontal = 0;
+=======
+        KeyHorizontal = 0;
+>>>>>>> 8c8aeda9a18718168c684636512b582fe59e3c7a
         ToggleCursorLock(true);
     }
 
@@ -33,14 +45,20 @@ public class LocalInput : MonoBehaviour
         playerMovement.yRotationSpeed = mouseHorizontal;
         keyVertical = Input.GetAxisRaw("Vertical");
         playerMovement.forwardForce = keyVertical;
+<<<<<<< HEAD
         keyHorizontal = Input.GetAxisRaw("Horizontal");
         playerMovement.horizontalForce = keyHorizontal;
+=======
+        KeyHorizontal = Input.GetAxisRaw("Horizontal");
+        playerMovement.horizontalForce = KeyHorizontal;
+>>>>>>> 8c8aeda9a18718168c684636512b582fe59e3c7a
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //ESC Å°·Î Ä¿¼­ Àá±İ ¿©ºÎ Á¶Àı
+            //ESC Å°ï¿½ï¿½ Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             ToggleCursorLock(!cursorLocked);
         }
+
     }
 
     void ToggleCursorLock(bool isLocked)

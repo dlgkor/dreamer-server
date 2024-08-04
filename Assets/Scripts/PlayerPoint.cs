@@ -7,12 +7,10 @@ public class PlayerPoint : MonoBehaviour
     public float maxPlayerPoints = 1.0f; // 플레이어 포인트 최대값
     public float pointDeductionRate = 0.0001f; // 플레이어 포인트 프레임당 감소량
     private float playerPoints;  // 플레이어의 포인트
-    private float dreward;
 
     private void Start()
     {
         playerPoints = maxPlayerPoints; //플레이어 포인트 최대값으로 초기화
-        dreward = 0f;
     }
 
     private void Update()
@@ -45,7 +43,6 @@ public class PlayerPoint : MonoBehaviour
             if (reward != null)
             {
                 AddPoints(reward.RewardScore);  // 수정된 프로퍼티 사용
-                dreward += reward.RewardScore;
                 Debug.Log("Reward 객체 삭제");
                 Destroy(other.gameObject);
             }
@@ -65,13 +62,5 @@ public class PlayerPoint : MonoBehaviour
     public float getPoint()
     {
         return playerPoints;
-    }
-
-    public float getdReward()
-    {
-        //보상 변화량 반환
-        float t_dReward = dreward;
-        dreward = 0f;
-        return t_dReward;
     }
 }
