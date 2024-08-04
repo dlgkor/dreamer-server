@@ -63,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
             + Mathf.Abs(horizontalForce * 100f)
             + Mathf.Abs(xRotationSpeed * 5f) + Mathf.Abs(yRotationSpeed * 5f)) * (-1) * Time.fixedDeltaTime * 0.0001f);
         
+        
     }
 
     private void SpeedControl()
